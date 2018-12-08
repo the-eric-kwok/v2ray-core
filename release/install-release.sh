@@ -392,9 +392,12 @@ checkUpdate(){
 
 main(){
     #helping information
-    [[ "$HELP" == "1" ]] && Help ; return
-    [[ "$CHECK" == "1" ]] && checkUpdate ; return
-    [[ "$REMOVE" == "1" ]] && remove ; return
+    [[ "$HELP" == "1" ]] && Help && return
+    if [[ "$CHECK" == "1" ]]; then
+        checkUpdate
+        return $?
+    fi
+    [[ "$REMOVE" == "1" ]] && remove && return
     
     sysArch
     # extract local file
