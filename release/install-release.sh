@@ -186,7 +186,7 @@ extract(){
 }
 
 
-# 1: new V2Ray. 0: no. 2: not installed. 3: check failed. 4: don't check.
+# 1: new V2Ray. 0: no new version. 2: not installed. 3: check failed. 4: don't check.
 getVersion(){
     if [[ -n "$VERSION" ]]; then
         NEW_VER="$VERSION"
@@ -387,14 +387,14 @@ checkUpdate(){
         colorEcho ${YELLOW} "No V2Ray installed."
         colorEcho ${BLUE} "The newest version for V2Ray is ${NEW_VER}."
     fi
-    return 0
+    return $RETVAL
 }
 
 main(){
     #helping information
-    [[ "$HELP" == "1" ]] && Help && return
-    [[ "$CHECK" == "1" ]] && checkUpdate && return
-    [[ "$REMOVE" == "1" ]] && remove && return
+    [[ "$HELP" == "1" ]] && Help ; return
+    [[ "$CHECK" == "1" ]] && checkUpdate ; return
+    [[ "$REMOVE" == "1" ]] && remove ; return
     
     sysArch
     # extract local file
@@ -404,17 +404,6 @@ main(){
         installSoftware unzip || return $?
         rm -rf /tmp/v2ray
         extract $LOCAL || return $?
-        #FILEVDIS=`ls /tmp/v2ray |grep v2ray-v |cut -d "-" -f4`
-        #SYSTEM=`ls /tmp/v2ray |grep v2ray-v |cut -d "-" -f3`
-        #if [[ ${SYSTEM} != "linux" ]]; then
-        #    colorEcho ${RED} "The local V2Ray can not be installed in linux."
-        #    return 1
-        #elif [[ ${FILEVDIS} != ${VDIS} ]]; then
-        #    colorEcho ${RED} "The local V2Ray can not be installed in ${ARCH} system."
-        #    return 1
-        #else
-        #    NEW_VER=`ls /tmp/v2ray |grep v2ray-v |cut -d "-" -f2`
-        #fi
     else
         # download via network and extract
         installSoftware "curl" || return $?
